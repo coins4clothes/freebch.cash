@@ -16,8 +16,12 @@ let router = express.Router();
 let BITBOXSDK = require('bitbox-sdk/lib/bitbox-sdk').default;
 let BITBOX = new BITBOXSDK();
 
-let delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+let fse = require('fs-extra');
+let appConfig = fse.readJsonSync(__dirname + '/local.js', { throws: false }) || {};
 
+let wallet = require(__dirname + '/wallet.js');
+
+let delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 /**
  * Make sure our data files exist.
@@ -96,17 +100,25 @@ router.post('/sms', async function(req, res, next) {
   // Make them wait 2 seconds * the number of requests this ip has made 
   let paymentAddress = req.param('address');
   let smsCodeToSend = Math.floor(Math.random()*89999+10000);
-  console.log('Giving user SMS Code',smsCodeToSend,'for address', paymentAddress);
+  // console.log('Giving user SMS Code',smsCodeToSend,'for address', paymentAddress);
 
+  console.log('Sending 17k satoshis to', paymentAddress);
   try {
-    await db
-      .get('codes')
-      .push({ id: smsCodeToSend, address: paymentAddress.toLowerCase(), sent: false })
-      .write();
+    await wallet.sendMoney({ to: paymentAddress })
   }
   catch(nope) {
-    console.log('Error writing new code:', nope);
+    console.log('ERROR:', nope);
   }
+
+  // try {
+  //   await db
+  //     .get('codes')
+  //     .push({ id: smsCodeToSend, address: paymentAddress.toLowerCase(), sent: false })
+  //     .write();
+  // }
+  // catch(nope) {
+  //   console.log('Error writing new code:', nope);
+  // }
 
   return res.status(200).json({ code: smsCodeToSend });
 });
@@ -220,6 +232,20 @@ let checkAnnounce = async function() {
   // io.emit('drop', { image: 'lol' });
 };
 
-let intervalId = setInterval(checkAnnounce, 10000);
+// let intervalId = setInterval(checkAnnounce, 10000);
+
+
+let doIt=async function(){
+
+  try {
+    await wallet.sendMoney({ to: 'bitcoincash:qzx4tqcldmvs4up9mewkf3ru0z6vy9wm6qm782fwla' })
+  }
+  catch(nope) {
+    console.log('ERROR:', nope);
+  }
+
+};
+
+// setTimeout(doIt, 3000);
 
 module.exports = { app: app, server: server, io: io, db: db }
