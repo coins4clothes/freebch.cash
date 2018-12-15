@@ -146,12 +146,18 @@
         // console.log('NOPE!', nope);
       }
 
-      let sendTextWrapHtml = '<h1>Finally, text <span class="sms-code">'+
-        smsCode.code+'</span> to +1 647-952-5142</h1>'+
-        '<p class="text-wrap-explain">You can use any phone.  Your number will not be recorded and you will not be charged for the message.</p>';
+      // let sendTextWrapHtml = '<h1>Finally, text <span class="sms-code">'+
+      //   smsCode.code+'</span> to +1 647-952-5142</h1>'+
+      //   '<p class="text-wrap-explain">You can use any phone.  Your number will not be recorded and you will not be charged for the message.</p>';
 
-      $('#send-text-wrap').html(sendTextWrapHtml);
-      $('#send-text-wrap').addClass('show');
+      // $('#send-text-wrap').html(sendTextWrapHtml);
+      // $('#send-text-wrap').addClass('show');
+
+        $('#show-address-wrap').removeClass('show');
+        $('#send-text-wrap').removeClass('show');
+        $('#show-success-wrap').html('<h1>Your Bitcoin Cash (BCH) has been sent!</h1>');
+        $('#show-success-wrap').addClass('show');
+
 
     };
 
