@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Coins 4 Clothes - freebch.cash</title>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Language" content="en">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+    <script src="/js/jquery-3.3.1.slim.min.js"></script>
+    <script src="/js/popper.min.js"></script>
+
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <script src="/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/socket.io.js"></script>
+
+  </head>
+  <body>
+
+    <div id="page-wrap">
+
+      <div class="row header nmnp">
+        <div class="col-12">
+          Welcome to the Coins 4 Clothes Faucet page
+        </div>
+      </div>
+      
+      <section class="row section nmnp">
+        <div class="col-xs-1 col-md-2 col-lg-3"></div>
+        <div class="col-xs-10 col-md-8 col-lg-6">
+          <div class="content-wrap">
+
+            <div id="input-address-wrap">
+              <h2>Enter your Bitcoin Cash Address</h2>
+              <input id="address" type="text" class="form-control" placeholder="bitcoincash:qzx4tqcldmvs4up9mewkf3ru0z6vy9wm6qm782fwla" aria-label="Payment Address" aria-describedby="basic-addon1" onkeyup="validateAddress()" onchange="validateAddress()" data-validated="false">
+            </div>
+            <div id="show-address-wrap" class="hide">
+            </div>
+            <div id="send-text-wrap" class="hide">
+            </div>
+            <div id="input-text-wrap" class="hide">
+              <input id="smscode" type="text" class="form-control" placeholder="xxxxx" aria-label="SMS Code" aria-describedby="basic-addon1" data-validated="false">
+              <button type="button" class="btn btn-outline-warning btn-lg mt-1">Get your Bitcoin Cash (BCH)</button>
+            </div>
+            <div id="show-success-wrap" class="hide">
+            </div>
+
+          </div>
+        </div>
+        <div class="col-xs-1 col-md-2 col-lg-3"></div>
+      </section>
+
+    </div>
+
+  </body>
+
+  <script language="javascript">
+    let delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+    let validateAddress = async function() {
+
+      let getSMSCode = async function(validatedAddressValue) {
+
+        return new Promise(function(resolve, reject) {
+
+          $.ajax({
+            dataType: 'json',
+            method: 'POST',
+            url: '/sms',
+            data: {
+              address: validatedAddressValue
+            }
+          })
+          .done((response) => {
+            return resolve(response);
+          })
+          .fail((error) => {
+            // console.log('got error', error);
+            return reject(error);
+          });
+
+        });
+
+      };
+
+      let validateAddressOnServer = async function(someAddressValue) {
+
+        return new Promise(function(resolve, reject) {
+
+          $.ajax({
+            dataType: 'json',
+            method: 'GET',
+            url: '/validate/address',
+            data: {
+              address: someAddressValue
+            }
+          })
+          .done((response) => {
+            if (!$('#address').data('validated')) {
+              $('#address').data({ validated: true });
+              return resolve(response);
+            }
+          })
+          .fail((error) => {
+            // console.log('got error', error);
+            return reject(error);
+          });
+
+        });
+
+      };
+
+      let addressValue = $('#address').val();
+
+      console.log('Validating', addressValue, 'with the server');
+
+      let serverResponse;
+      try {
+        serverResponse = await validateAddressOnServer(addressValue);
+      }
+      catch(nope) {
+        $('#address').addClass('invalid');
+        return;
+      }
+
+      if (!(serverResponse && serverResponse.address)) {
+        return;
+      }
+
+      $('#address').removeClass('invalid').addClass('valid');
+      await delay(1000);
+      $('#input-address-wrap').addClass('hide');
+      $('#show-address-wrap').html('<h1>'+serverResponse.address+'</h1>');
+      $('#show-address-wrap').addClass('show');
+
+      let smsCode;
+      try {
+        smsCode = await getSMSCode(serverResponse.address);
+      }
+      catch(nope) {
+        // console.log('NOPE!', nope);
+      }
+
+      let sendTextWrapHtml = '<h1>Finally, text <span class="sms-code">'+
+        smsCode.code+'</span> to +1 647-952-5142</h1>'+
+        '<p class="text-wrap-explain">You can use any phone.  Your number will not be recorded and you will not be charged for the message.</p>';
+
+      $('#send-text-wrap').html(sendTextWrapHtml);
+      $('#send-text-wrap').addClass('show');
+
+    };
+
+    let validateSMSCode = async function() {
+
+      let getSMSCode = async function(validatedAddressValue) {
+
+        return new Promise(function(resolve, reject) {
+
+          $.ajax({
+            dataType: 'json',
+            method: 'POST',
+            url: '/validate/sms',
+            data: {
+              address: validatedAddressValue
+            }
+          })
+          .done((response) => {
+            return resolve(response);
+          })
+          .fail((error) => {
+            // console.log('got error', error);
+            return reject(error);
+          });
+
+        });
+
+      };
+
+    };
+
+
+    let smsverified = function(details) {
+      console.log('Someone has sent an sms message.  Was it you?', details);
+
+      let userAddress = $('#address').val();
+
+      if (details.address === userAddress) {
+        console.log('Its you!!!');
+        $('#show-address-wrap').removeClass('show');
+        $('#send-text-wrap').removeClass('show');
+        $('#show-success-wrap').html('<h1>Your Bitcoin Cash (BCH) has been sent!</h1>');
+        $('#show-success-wrap').addClass('show');
+      }
+      else {
+        console.log('it wasnt you because', details.address, '!==', userAddress);
+      }
+
+    };
+
+    window.onload = function(){
+      window.socket = io();
+      // console.log('window.socket', window.socket);
+      window.socket.on('smsverified', smsverified);
+    }
+
+  </script>
+
+</html>
+
+
+

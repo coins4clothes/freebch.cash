@@ -1,0 +1,31 @@
+{
+  "name": "freebch.cash",
+  "version": "0.0.1",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node ./bin/www",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "bitbox-sdk": "2.2.6",
+    "body-parser": "~1.13.2",
+    "cookie-parser": "~1.3.5",
+    "debug": "~2.2.0",
+    "express": "~4.13.1",
+    "morgan": "^1.9.1",
+    "plivo": "4.0.5",
+    "serve-favicon": "~2.3.0",
+    "socket.io": "^1.3.7"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coins4clothes/freebch.cash.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/coins4clothes/freebch.cash/issues"
+  },
+  "homepage": "https://github.com/coins4clothes/freebch.cash#readme"
+}
