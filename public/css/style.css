@@ -13,7 +13,7 @@ html, body {
   height: auto!important;
   min-height: 100%;
   position: relative;
-  background-color: #5f6360;
+  background-color: lightgray;
 }
 
 /*.content-box {
@@ -76,7 +76,7 @@ html, body {
   width: 100%;
   min-height: 100%;
   text-align: center;
-  background-color: #5f6360;
+  background-color: lightgray;
   min-height: 100%;
   position: absolute;
   overflow-x: hidden;

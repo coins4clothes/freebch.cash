@@ -20,7 +20,7 @@ var wallet = {
 };
 
 wallet.sendMoney = async function(options) {
-  let paymentAmount = 17000;
+  let paymentAmount = 20000;
 
   // Ensure there are no undefined or duplicate
   // addresses in the from array.
