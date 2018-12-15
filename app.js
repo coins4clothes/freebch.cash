@@ -18,6 +18,33 @@ let BITBOX = new BITBOXSDK();
 
 let delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
+
+/**
+ * Make sure our data files exist.
+ */
+
+// let dataFileName = __dirname + '/database.json';
+let FileAsync = require('lowdb/adapters/FileAsync');
+let db;
+
+(async ()=> {
+
+  try {
+    db = await require('lowdb')(new FileAsync('db.json'));
+  }
+  catch(nope) {
+    console.log('Error setting up DB:', nope);
+  }
+
+  // Set some defaults (required if your JSON file is empty)
+  db.defaults({ codes: [], texts: [] }).write();
+
+  console.log('Database ready.')
+
+  return db;
+  
+})();
+
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(function(req, res, next){
@@ -57,17 +84,29 @@ router.get('/subscribe', async function(req, res, next) {
 });
 
 
+router.post('/incoming/sms', async function(req, res, next) {
+
+  console.log('New text message:', req.params);
+
+  return res.status(200).send();
+});
+
+
 router.post('/sms', async function(req, res, next) {
   // Make them wait 2 seconds * the number of requests this ip has made 
   let paymentAddress = req.param('address');
   let smsCodeToSend = Math.floor(Math.random()*89999+10000);
   console.log('Giving user SMS Code',smsCodeToSend,'for address', paymentAddress);
 
-  let sendFakeVerify = function() {
-    io.emit('smsverified', { address: paymentAddress });
-  };
-
-  setTimeout(sendFakeVerify, 10000);
+  try {
+    await db
+      .get('codes')
+      .push({ id: smsCodeToSend, address: paymentAddress.toLowerCase(), sent: false })
+      .write();
+  }
+  catch(nope) {
+    console.log('Error writing new code:', nope);
+  }
 
   return res.status(200).json({ code: smsCodeToSend });
 });
@@ -139,11 +178,48 @@ app.use(function(err, req, res, next) {
 });
 
 
-let dripDrop = function() {
+let checkAnnounce = async function() {
+
+  console.log('Checking for codes');
+
+  let allCodes;
+  try {
+    allCodes = await db
+      .get('codes')
+      // .find({ sent: false })
+      .value();
+  }
+  catch(nope) {
+    console.log('Error reading codes:', nope);
+  }
+
+  for (let oneCode of allCodes) {
+
+    let getText;
+    try {
+      getText = await db
+        .get('texts')
+        .find({ sent: false })
+        .value();
+    }
+    catch(nope) {
+      console.log('Error reading codes:', nope);
+    }
+
+
+  }
+
+
+  console.log('Found codes:', allCodes);
+  // db.get('posts')
+  // .find({ title: 'low!' })
+  // .assign({ title: 'hi!'})
+  // .write()
+
   // console.log('Dripping a drop');
   // io.emit('drop', { image: 'lol' });
 };
 
-let intervalId = setInterval(dripDrop, 10000);
+let intervalId = setInterval(checkAnnounce, 10000);
 
-module.exports = { app: app, server: server, io: io };
+module.exports = { app: app, server: server, io: io, db: db }
