@@ -1,0 +1,41 @@
+{
+  "author": "alwaysAn0n",
+  "bugs": {
+    "url": "https://github.com/coins4clothes/freebch.cash/issues"
+  },
+  "description": "A BCH faucet for coins4clothes.com",
+  "dependencies": {
+    "@sailshq/connect-redis": "^3.2.1",
+    "@sailshq/lodash": "^3.10.3",
+    "@sailshq/socket.io-redis": "^5.2.0",
+    "async": "2.0.1",
+    "bitbox-sdk": "2.3.0",
+    "grunt": "1.0.1",
+    "plivo": "4.0.5",
+    "sails": "^1.0.2",
+    "sails-hook-grunt": "^3.0.2",
+    "sails-hook-orm": "^2.0.0-16",
+    "sails-hook-sockets": "^1.4.0"
+  },
+  "devDependencies": {
+    "@sailshq/eslint": "^4.19.3"
+  },
+  "engines": {
+    "node": ">=9.0"
+  },
+  "homepage": "https://github.com/coins4clothes/freebch.cash#readme",
+  "license": "ISC",
+  "main": "app.js",
+  "name": "freebch.cash",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coins4clothes/freebch.cash.git"
+  },
+  "scripts": {
+    "start": "node app.js --port=3000",
+    "test": "npm run lint && npm run custom-tests && echo 'Done.'",
+    "lint": "eslint . --max-warnings=0 --report-unused-disable-directives && echo '✔  Your .js files look good.'",
+    "custom-tests": "echo \"(No other custom tests yet.)\" && echo"
+  },
+  "version": "0.1.1"
+}
