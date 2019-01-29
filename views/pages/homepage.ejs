@@ -26,6 +26,10 @@
     max-width: 350px;
   }
 
+  a {
+    text-decoration: none;
+  }
+
   .showcase {
     font-size: 25px;
     font-weight: 300;
@@ -38,7 +42,6 @@ setTimeout(function sunrise () {
 }, 0);
 </script>
 
-<div id="notification-hole"></div>
 <div class="default-page">
   <div class="header">
     <h1 id="main-title" class="container"><%= __('Coins4Clothes Faucet') %></h1>
@@ -59,11 +62,11 @@ setTimeout(function sunrise () {
           </p>
 
           <div class="body-section" id="cashAddress-container">
-            <input type="text" id="cashAddress" placeholder="bitcoincash:qzx4tqcldmvs4up9mewkf3ru0z6vy9wm6qm782fwla" oninput="validateAddress()" data-validated="false">
+            <input type="text" id="cashAddress" placeholder="bitcoincash:qrtdtwgqcg5hg2q6nusz6gpyzmwvcrk2j5araf8sda" oninput="validateAddress()" data-validated="false">
           </div>
 
           <div class="body-section" id="phoneNumber-container">
-            <input type="text" id="phoneNumber" placeholder="1+419-987-4914">
+            <input type="text" id="phoneNumber" placeholder="+1-647-987-4914">
             <div class="confirm-button" onclick="getCode()">Text Me the Code</div>
           </div>
 

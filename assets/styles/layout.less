@@ -1,0 +1,52 @@
+@footer-height: 70px;
+
+[v-cloak] { display: none }
+
+*:focus {
+  outline: none !important; // Overwrite bootstrap
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  min-width: 320px;
+}
+
+/* Class that prevents chrome's text-selection on double-click */
+.no-select {
+  -webkit-user-select: none;  /* Chrome all / Safari all */
+  -moz-user-select: none;     /* Firefox all */
+  -ms-user-select: none;      /* IE 10+ */
+  user-select: none; 
+};
+
+#page-wrap {
+  height: 100%;
+  height: auto!important;
+  min-height: 100%;
+  max-height: 100%;
+  position: relative;
+  padding-bottom: @footer-height;
+};
+
+#page-footer {
+  height: @footer-height;
+  max-height: 100px;
+  width: 100%;
+  padding-top: 1rem;
+  position: absolute;
+  left: 0px;
+  bottom: 0px;
+
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+
+  .footer-div {
+    font-size: .7rem;
+    margin-left: 10px;
+    margin-right: 10px;
+
+  }
+
+};

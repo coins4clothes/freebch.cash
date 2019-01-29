@@ -14,12 +14,12 @@ var callServer = async function(url, options) {
 var steps = {
   cashAddress: {
     header: 'Enter your Bitcoin Cash Address',
-    message: 'Reference the photos on the previous page if you need help.',
+    message: 'Click here to reference our Bitcoin Basics guide (in a new tab)',
     value: undefined
   },
   phoneNumber: {
     header: 'Enter your mobile phone number',
-    message: 'This is only used to identify you in our system.  It will never be shared with other companies.  It will never be sold.',
+    message: 'Make sure to include your country code (in Canada and USA the country code is +1 ). This is only used to identify you in our system.  It will never be shared with other companies.  It will never be sold.',
     value: undefined
   },
   code: {
@@ -149,7 +149,7 @@ $( document ).ready(function() {
   $('#results-container').hide();
 
   $('#hint-title').text(steps.cashAddress.header);
-  $('#hint-message').text(steps.cashAddress.message);
+  $('#hint-message').html('<a href="https://www.coins4clothes.com/bitcoin-basics" target="_blank">'+steps.cashAddress.message+'</a>');
 
   console.log('loading');
   io.socket.get('/checkin');
