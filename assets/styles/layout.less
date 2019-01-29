@@ -6,6 +6,19 @@
   outline: none !important; // Overwrite bootstrap
 }
 
+
+html {
+  box-sizing: border-box;
+  -ms-overflow-style: scrollbar;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+
 html, body {
   height: 100%;
   margin: 0;
@@ -24,7 +37,6 @@ html, body {
   height: 100%;
   height: auto!important;
   min-height: 100%;
-  max-height: 100%;
   position: relative;
   padding-bottom: @footer-height;
 };
@@ -33,10 +45,11 @@ html, body {
   height: @footer-height;
   max-height: 100px;
   width: 100%;
-  padding-top: 1rem;
   position: absolute;
   left: 0px;
   bottom: 0px;
+  margin-top: 0px;
+  padding-top: 0px;
 
   display: inline-flex;
   justify-content: center;
@@ -50,3 +63,22 @@ html, body {
   }
 
 };
+
+
+@media (max-width: 800px) {
+  #page-wrap {
+    padding-bottom: 75px;
+    #page-footer {
+      height: 75px;
+    }
+  }
+}
+
+@media (max-width: 450px) {
+  #page-wrap {
+    padding-bottom: 85px;
+    #page-footer {
+      height: 120px;
+    }
+  }
+}
